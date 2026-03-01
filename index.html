@@ -3,65 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>錢錢地圖 - 我的投資紀錄</title>
+    <title>我的投資紀錄儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F8F9FB; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F8F9FB; -webkit-tap-highlight-color: transparent; }
         .animate-in { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .zoom-in { animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        ::-webkit-scrollbar { width: 0px; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1em; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo } = React;
+        const { useState, useMemo, useEffect } = React;
 
-        // 簡易圖示元件 (取代原本會報錯的 Lucide)
-        const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
+        // 修正後的圖示組件
+        const LucideIcon = ({ name, size = 20, className = "" }) => {
+            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
+            return <i data-lucide={name} className={className} style={{ width: size, height: size, display: 'inline-block' }}></i>;
+        };
+
+        const COLOR_OPTIONS = [
+            { id: 'yellow', class: 'bg-[#FDE047] text-black', hex: '#FDE047' },
+            { id: 'purple', class: 'bg-[#C084FC] text-white', hex: '#C084FC' },
+            { id: 'orange', class: 'bg-[#FB923C] text-white', hex: '#FB923C' },
+            { id: 'green',  class: 'bg-[#4ADE80] text-black', hex: '#4ADE80' },
+            { id: 'pink',   class: 'bg-[#F9A8D4] text-black', hex: '#F9A8D4' },
+            { id: 'black',  class: 'bg-[#1C1C1E] text-white', hex: '#1C1C1E' },
+        ];
 
         function App() {
             const [investments, setInvestments] = useState([
                 { id: '1', platform: 'Google', amount: 2500, currency: 'USD', type: '美股 ETF', date: '2024-02-15', colorId: 'yellow', note: '長期持有' },
-                { id: '2', platform: 'Apple', amount: 4800, currency: 'USD', type: '成長股', date: '2024-02-10', colorId: 'orange', note: '核心配置' }
+                { id: '2', platform: 'Apple', amount: 4800, currency: 'USD', type: '成長股', date: '2024-02-10', colorId: 'orange', note: '核心配置' },
+                { id: '3', platform: '台積電', amount: 650, currency: 'TWD', type: '核心持股', date: '2024-02-28', colorId: 'green', note: '護國神山' }
             ]);
 
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [isTotalVisible, setIsTotalVisible] = useState(true);
+            const [formData, setFormData] = useState({ platform: '', amount: '', currency: 'USD', type: '', note: '', date: new Date().toISOString().split('T')[0], colorId: 'yellow' });
+
+            const totalInvestment = useMemo(() => investments.reduce((sum, item) => sum + Number(item.amount), 0), [investments]);
+
+            const chartData = useMemo(() => {
+                let offset = 0;
+                return investments.map(item => {
+                    const percentage = (item.amount / totalInvestment) * 100;
+                    const currentOffset = offset;
+                    offset += percentage;
+                    return { ...item, percentage, offset: currentOffset, hex: COLOR_OPTIONS.find(c => c.id === item.colorId)?.hex };
+                });
+            }, [investments, totalInvestment]);
+
             return (
-                <div className="max-w-md mx-auto min-h-screen pb-20 animate-in">
-                    <header className="p-6 bg-white border-b sticky top-0 z-10">
-                        <h1 className="text-2xl font-bold text-gray-800">💰 錢錢地圖</h1>
-                        <p className="text-sm text-gray-500 mt-1">追蹤你的資產分佈</p>
-                    </header>
-                    
-                    <main className="p-4 space-y-4">
-                        {investments.map(inv => (
-                            <div key={inv.id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <h3 className="font-bold text-lg text-gray-800">{inv.platform}</h3>
-                                        <p className="text-xs text-gray-400">{inv.date}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="font-bold text-blue-600">{inv.currency} {inv.amount.toLocaleString()}</p>
-                                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">{inv.type}</span>
+                <div className="min-h-screen p-4 md:p-10 pb-32 animate-in">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        
+                        {/* 左側：總額與圓餅圖 */}
+                        <div className="lg:col-span-5 space-y-6">
+                            <div className="bg-white rounded-[40px] p-10 shadow-sm border border-gray-50">
+                                <div className="flex justify-between mb-4">
+                                    <span className="font-bold text-gray-400 uppercase tracking-widest text-xs">Total Assets</span>
+                                    <button onClick={() => setIsTotalVisible(!isTotalVisible)} className="text-gray-300"><LucideIcon name={isTotalVisible ? "eye" : "eye-off"} /></button>
+                                </div>
+                                <div className="text-5xl font-black tracking-tighter">
+                                    {isTotalVisible ? `$${totalInvestment.toLocaleString()}` : '••••••••'}
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-[40px] p-10 shadow-sm border border-gray-50 text-center">
+                                <h3 className="text-left font-bold mb-8">資產比例</h3>
+                                <div className="relative w-64 h-64 mx-auto mb-8">
+                                    <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+                                        {chartData.map((slice, i) => (
+                                            <circle key={i} cx="18" cy="18" r="15.9155" fill="transparent" stroke={slice.hex} strokeWidth="4"
+                                                strokeDasharray={`${slice.percentage} ${100 - slice.percentage}`} strokeDashoffset={-slice.offset}
+                                                strokeLinecap="round" className="transition-all duration-700" />
+                                        ))}
+                                    </svg>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-2xl font-black">{isTotalVisible ? `${investments.length}筆` : '••'}</span>
+                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Invested</span>
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </main>
+                        </div>
 
-                    <button className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg active:scale-95 transition-transform">
-                        <IconPlus />
+                        {/* 右側：投資列表 */}
+                        <div className="lg:col-span-7">
+                            <div className="flex justify-between items-center mb-6 px-2">
+                                <h2 className="text-2xl font-black">資產足跡</h2>
+                                <button onClick={() => setIsModalOpen(true)} className="bg-black text-white px-6 py-2 rounded-full font-bold text-sm">新增紀錄</button>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {investments.map(item => (
+                                    <div key={item.id} className={`${COLOR_OPTIONS.find(c => c.id === item.colorId).class} rounded-[32px] p-8 shadow-sm hover:scale-[1.02] transition-transform cursor-pointer relative group`}>
+                                        <div className="flex justify-between mb-12">
+                                            <div className="w-12 h-12 bg-black/5 rounded-2xl flex items-center justify-center font-black text-xl">{item.platform[0]}</div>
+                                            <div className="text-[10px] font-bold opacity-40 uppercase">{item.date}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold opacity-40 uppercase mb-1">{item.platform}</div>
+                                            <div className="text-3xl font-black tracking-tighter mb-2">{item.currency} {item.amount.toLocaleString()}</div>
+                                            <div className="inline-block px-3 py-1 rounded-full border border-current text-[10px] font-black opacity-60 uppercase">{item.type}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 懸浮按鈕 (iPhone 專用) */}
+                    <button onClick={() => setIsModalOpen(true)} className="lg:hidden fixed bottom-8 right-8 w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-2xl z-40">
+                        <LucideIcon name="plus" size={32} />
                     </button>
+
+                    {/* 新增視窗 */}
+                    {isModalOpen && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
+                            <div className="bg-white rounded-[40px] p-10 w-full max-w-lg shadow-2xl relative z-10 zoom-in">
+                                <h2 className="text-3xl font-black mb-6">新增投資項目</h2>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault();
+                                    setInvestments([{ ...formData, id: Date.now().toString(), amount: Number(formData.amount) }, ...investments]);
+                                    setIsModalOpen(false);
+                                }} className="space-y-4">
+                                    <input type="text" placeholder="平台名稱" className="w-full p-4 bg-gray-50 rounded-2xl font-bold" value={formData.platform} onChange={e => setFormData({...formData, platform: e.target.value})} required />
+                                    <input type="number" placeholder="投資金額" className="w-full p-4 bg-gray-100 rounded-2xl font-bold" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} required />
+                                    <div className="flex gap-2">
+                                        {COLOR_OPTIONS.map(c => (
+                                            <button key={c.id} type="button" onClick={() => setFormData({...formData, colorId: c.id})} className={`w-10 h-10 rounded-xl border-2 ${c.class.split(' ')[0]} ${formData.colorId === c.id ? 'border-black' : 'border-transparent'}`} />
+                                        ))}
+                                    </div>
+                                    <button type="submit" className="w-full bg-black text-white py-5 rounded-2xl font-black text-xl shadow-lg active:scale-95 transition-transform">確認儲存</button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
 
-        // 這是最重要的一行：把 App 渲染到網頁上
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
