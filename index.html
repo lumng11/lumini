@@ -6,13 +6,13 @@
     <title>我的投資紀錄儀表板</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
+    <!-- React & ReactDOM (UMD) -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Lucide Icons (CDN) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons (UMD version) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         body {
@@ -39,15 +39,16 @@
         const { useState, useMemo, useEffect } = React;
 
         /**
-         * 修正後的 Lucide 圖示組件
-         * 使用 useEffect 確保在 DOM 渲染後呼叫 lucide.createIcons()
+         * 穩定版 Lucide 圖示組件
+         * 使用 data-lucide 屬性與 UMD 庫配合
          */
         const LucideIcon = ({ name, size = 20, className = "" }) => {
             useEffect(() => {
+                // 每次組件渲染後，確保 lucide 重新掃描該 DOM
                 if (window.lucide) {
                     window.lucide.createIcons();
                 }
-            }, [name]); // 當圖示名稱改變時重新觸發轉換
+            }, [name]); // 當圖示名稱變換時重新啟動
 
             return (
                 <i 
@@ -56,7 +57,9 @@
                     style={{ 
                         width: size, 
                         height: size, 
-                        display: 'inline-block',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         strokeWidth: 2.5
                     }}
                 ></i>
@@ -101,10 +104,12 @@
                 date: new Date().toISOString().split('T')[0], colorId: 'yellow'
             });
 
-            // 頂層監控，確保 UI 變動（如打開 Modal）後圖示能正確渲染
+            // 確保每次狀態變動導致 UI 重新渲染後，Lucide 圖示都能被正確轉換
             useEffect(() => {
-                if (window.lucide) window.lucide.createIcons();
-            }, [investments, isModalOpen, isTotalVisible, isChartValueVisible, displayMode]);
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }); // 這裡不放依賴陣列，確保每次渲染後都會檢查圖示
 
             const totalInvestment = useMemo(() => {
                 return investments.reduce((sum, item) => sum + Number(item.amount), 0);
@@ -299,10 +304,12 @@
                         </div>
                     </div>
 
+                    {/* 新增按鈕 */}
                     <button onClick={openAddModal} className="fixed bottom-10 right-10 w-20 h-20 bg-black text-white rounded-[28px] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-40 group">
                         <LucideIcon name="plus" size={36} className="group-hover:rotate-90 transition-transform duration-300" />
                     </button>
 
+                    {/* 彈出視窗 */}
                     {isModalOpen && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                             <div className="absolute inset-0 bg-[#F2F2F7]/80 backdrop-blur-xl" onClick={() => setIsModalOpen(false)}></div>
@@ -364,6 +371,7 @@
             );
         }
 
+        // 關鍵掛載指令：讓 React 接管 id 為 root 的 DOM
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
