@@ -2,22 +2,34 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的投資紀錄儀表板</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F8F9FB; -webkit-tap-highlight-color: transparent; }
-        .animate-in { animation: fadeIn 0.3s ease-out; }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F8F9FB;
+        }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .zoom-in { animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-in { animation: fadeIn 0.3s ease-out; }
+        .zoom-in { animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        select { 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); 
+            background-position: right 1.5rem center; 
+            background-repeat: no-repeat; 
+            background-size: 1.2em; 
+        }
         ::-webkit-scrollbar { width: 0px; }
-        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1em; }
     </style>
 </head>
 <body>
@@ -26,10 +38,29 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // 修正後的圖示組件
+        /**
+         * 修正後的 Lucide 圖示組件
+         * 使用 useEffect 確保在 DOM 渲染後呼叫 lucide.createIcons()
+         */
         const LucideIcon = ({ name, size = 20, className = "" }) => {
-            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
-            return <i data-lucide={name} className={className} style={{ width: size, height: size, display: 'inline-block' }}></i>;
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]); // 當圖示名稱改變時重新觸發轉換
+
+            return (
+                <i 
+                    data-lucide={name} 
+                    className={className} 
+                    style={{ 
+                        width: size, 
+                        height: size, 
+                        display: 'inline-block',
+                        strokeWidth: 2.5
+                    }}
+                ></i>
+            );
         };
 
         const COLOR_OPTIONS = [
@@ -38,114 +69,293 @@
             { id: 'orange', class: 'bg-[#FB923C] text-white', hex: '#FB923C' },
             { id: 'green',  class: 'bg-[#4ADE80] text-black', hex: '#4ADE80' },
             { id: 'pink',   class: 'bg-[#F9A8D4] text-black', hex: '#F9A8D4' },
+            { id: 'white',  class: 'bg-white text-black', hex: '#E2E8F0' }, 
             { id: 'black',  class: 'bg-[#1C1C1E] text-white', hex: '#1C1C1E' },
         ];
 
+        const CURRENCIES = [
+            { code: 'USD', symbol: '$' },
+            { code: 'TWD', symbol: 'NT$' },
+            { code: 'HKD', symbol: 'HK$' },
+            { code: 'JPY', symbol: '¥' },
+        ];
+
+        const generateId = () => Math.random().toString(36).substr(2, 9);
+
         function App() {
             const [investments, setInvestments] = useState([
-                { id: '1', platform: 'Google', amount: 2500, currency: 'USD', type: '美股 ETF', date: '2024-02-15', colorId: 'yellow', note: '長期持有' },
-                { id: '2', platform: 'Apple', amount: 4800, currency: 'USD', type: '成長股', date: '2024-02-10', colorId: 'orange', note: '核心配置' },
-                { id: '3', platform: '台積電', amount: 650, currency: 'TWD', type: '核心持股', date: '2024-02-28', colorId: 'green', note: '護國神山' }
+                { id: generateId(), platform: 'Google', amount: 2500.00, currency: 'USD', type: '美股 ETF', date: '2024-02-15', colorId: 'yellow', note: '長期持有，看好 AI 發展' },
+                { id: generateId(), platform: 'Apple', amount: 4800.00, currency: 'USD', type: '成長股', date: '2024-02-10', colorId: 'orange', note: '核心配置' },
+                { id: generateId(), platform: 'Binance', amount: 1500.00, currency: 'USD', type: '加密貨幣', date: '2024-01-20', colorId: 'purple', note: '數位黃金實驗' },
+                { id: generateId(), platform: '台積電', amount: 6500.00, currency: 'USD', type: '核心持股', date: '2024-02-28', colorId: 'green', note: '護國神山' },
             ]);
 
             const [isModalOpen, setIsModalOpen] = useState(false);
+            const [editingId, setEditingId] = useState(null);
             const [isTotalVisible, setIsTotalVisible] = useState(true);
-            const [formData, setFormData] = useState({ platform: '', amount: '', currency: 'USD', type: '', note: '', date: new Date().toISOString().split('T')[0], colorId: 'yellow' });
+            const [isChartValueVisible, setIsChartValueVisible] = useState(false); 
+            const [displayMode, setDisplayMode] = useState('percentage');
 
-            const totalInvestment = useMemo(() => investments.reduce((sum, item) => sum + Number(item.amount), 0), [investments]);
+            const [formData, setFormData] = useState({
+                platform: '', amount: '', currency: 'USD', type: '', note: '',
+                date: new Date().toISOString().split('T')[0], colorId: 'yellow'
+            });
+
+            // 頂層監控，確保 UI 變動（如打開 Modal）後圖示能正確渲染
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [investments, isModalOpen, isTotalVisible, isChartValueVisible, displayMode]);
+
+            const totalInvestment = useMemo(() => {
+                return investments.reduce((sum, item) => sum + Number(item.amount), 0);
+            }, [investments]);
+
+            const sortedInvestments = useMemo(() => {
+                return [...investments].sort((a, b) => new Date(b.date) - new Date(a.date));
+            }, [investments]);
 
             const chartData = useMemo(() => {
                 let offset = 0;
-                return investments.map(item => {
-                    const percentage = (item.amount / totalInvestment) * 100;
+                const grouped = investments.reduce((acc, item) => {
+                    if (!acc[item.platform]) {
+                        acc[item.platform] = { 
+                            platform: item.platform, 
+                            amount: 0, 
+                            currency: item.currency,
+                            hex: COLOR_OPTIONS.find(c => c.id === item.colorId)?.hex || '#ccc' 
+                        };
+                    }
+                    acc[item.platform].amount += Number(item.amount);
+                    return acc;
+                }, {});
+
+                return Object.values(grouped).map(item => {
+                    const percentage = totalInvestment > 0 ? (item.amount / totalInvestment) * 100 : 0;
                     const currentOffset = offset;
                     offset += percentage;
-                    return { ...item, percentage, offset: currentOffset, hex: COLOR_OPTIONS.find(c => c.id === item.colorId)?.hex };
+                    return { ...item, percentage, offset: currentOffset };
                 });
             }, [investments, totalInvestment]);
 
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const openAddModal = () => {
+                setEditingId(null);
+                setFormData({
+                    platform: '', amount: '', currency: 'USD', type: '', note: '',
+                    date: new Date().toISOString().split('T')[0], colorId: 'yellow'
+                });
+                setIsModalOpen(true);
+            };
+
+            const openEditModal = (item) => {
+                setEditingId(item.id);
+                setFormData({ ...item });
+                setIsModalOpen(true);
+            };
+
+            const handleDelete = (e, id) => {
+                e.stopPropagation();
+                setInvestments(prev => prev.filter(inv => inv.id !== id));
+                if (editingId === id) setIsModalOpen(false);
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!formData.platform || !formData.amount) return;
+                if (editingId) {
+                    setInvestments(prev => prev.map(inv => inv.id === editingId ? { ...formData, amount: Number(formData.amount) } : inv));
+                } else {
+                    const newEntry = { ...formData, id: generateId(), amount: Number(formData.amount) };
+                    setInvestments(prev => [newEntry, ...prev]);
+                }
+                setIsModalOpen(false);
+            };
+
+            const formatNumber = (num) => new Intl.NumberFormat('en-US', { minimumFractionDigits: 0 }).format(num);
+
             return (
-                <div className="min-h-screen p-4 md:p-10 pb-32 animate-in">
-                    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        
-                        {/* 左側：總額與圓餅圖 */}
-                        <div className="lg:col-span-5 space-y-6">
-                            <div className="bg-white rounded-[40px] p-10 shadow-sm border border-gray-50">
-                                <div className="flex justify-between mb-4">
-                                    <span className="font-bold text-gray-400 uppercase tracking-widest text-xs">Total Assets</span>
-                                    <button onClick={() => setIsTotalVisible(!isTotalVisible)} className="text-gray-300"><LucideIcon name={isTotalVisible ? "eye" : "eye-off"} /></button>
-                                </div>
-                                <div className="text-5xl font-black tracking-tighter">
-                                    {isTotalVisible ? `$${totalInvestment.toLocaleString()}` : '••••••••'}
-                                </div>
+                <div className="min-h-screen p-4 md:p-10 pb-32">
+                    <div className="max-w-7xl mx-auto">
+                        <header className="mb-10 flex items-end justify-between">
+                            <div>
+                                <h1 className="text-4xl md:text-5xl font-black tracking-tight">我的💰💰地圖</h1>
+                                <p className="text-gray-500 mt-3 font-medium text-lg">每一筆投入，都是通往財富自由的一小步。</p>
                             </div>
+                        </header>
 
-                            <div className="bg-white rounded-[40px] p-10 shadow-sm border border-gray-50 text-center">
-                                <h3 className="text-left font-bold mb-8">資產比例</h3>
-                                <div className="relative w-64 h-64 mx-auto mb-8">
-                                    <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            {/* 左側：總額與圖表 */}
+                            <div className="lg:col-span-5 space-y-8">
+                                <div className="bg-white rounded-[40px] p-10 shadow-sm relative overflow-hidden border border-gray-50">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Total Assets</span>
+                                            <span className="text-lg font-bold text-gray-700">資產總淨值</span>
+                                        </div>
+                                        <button onClick={() => setIsTotalVisible(!isTotalVisible)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-black hover:text-white transition-all">
+                                            <LucideIcon name={isTotalVisible ? "eye" : "eye-off"} />
+                                        </button>
+                                    </div>
+                                    <div className="text-5xl md:text-6xl font-black tracking-tighter">
+                                        {isTotalVisible ? `$${formatNumber(totalInvestment)}` : '••••••••'}
+                                    </div>
+                                    <div className="mt-6 flex items-center gap-2 text-green-600 font-bold text-sm bg-green-50 w-fit px-4 py-1.5 rounded-full">
+                                        <LucideIcon name="trending-up" size={16} />
+                                        <span>較上月成長 12.5%</span>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-[40px] p-10 shadow-sm overflow-hidden border border-gray-50 text-center">
+                                    <div className="flex items-center justify-between mb-12 text-left">
+                                        <h3 className="text-xl font-bold">資產分佈比例</h3>
+                                        <button onClick={() => setDisplayMode(displayMode === 'percentage' ? 'amount' : 'percentage')} className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all text-xs font-bold">
+                                            <LucideIcon name="arrow-right-left" size={14} />
+                                            {displayMode === 'percentage' ? '切換金額' : '切換比例'}
+                                        </button>
+                                    </div>
+
+                                    <div className="relative w-72 h-72 mb-12 scale-110 mx-auto">
+                                        <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+                                            {chartData.length > 0 ? chartData.map((slice, i) => (
+                                                <circle key={i} cx="18" cy="18" r="15.9155" fill="transparent" stroke={slice.hex} strokeWidth="3.5"
+                                                    strokeDasharray={`${slice.percentage} ${100 - slice.percentage}`} strokeDashoffset={-slice.offset}
+                                                    className="transition-all duration-700 ease-in-out" strokeLinecap="round" />
+                                            )) : <circle cx="18" cy="18" r="15.9155" fill="transparent" stroke="#F3F4F6" strokeWidth="3.5" />}
+                                        </svg>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                                            <button onClick={() => setIsChartValueVisible(!isChartValueVisible)} className="mb-1 text-gray-300 hover:text-gray-500 transition-colors">
+                                                <LucideIcon name={isChartValueVisible ? "eye" : "eye-off"} size={20} />
+                                            </button>
+                                            <span className="text-3xl font-black truncate max-w-full">
+                                                {isChartValueVisible ? `$${formatNumber(totalInvestment)}` : '•••••'}
+                                            </span>
+                                            <span className="text-xs text-gray-400 font-bold mt-1 tracking-widest uppercase">Net Worth</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full flex flex-wrap justify-center gap-x-8 gap-y-8 mt-6">
                                         {chartData.map((slice, i) => (
-                                            <circle key={i} cx="18" cy="18" r="15.9155" fill="transparent" stroke={slice.hex} strokeWidth="4"
-                                                strokeDasharray={`${slice.percentage} ${100 - slice.percentage}`} strokeDashoffset={-slice.offset}
-                                                strokeLinecap="round" className="transition-all duration-700" />
+                                            <div key={i} className="flex flex-col items-start min-w-[100px] text-left">
+                                                <div className="text-lg font-black text-gray-900 mb-1">
+                                                    {displayMode === 'percentage' ? `${Math.round(slice.percentage)}%` : `$${formatNumber(slice.amount)}`}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-1.5 rounded-full" style={{ backgroundColor: slice.hex }}></div>
+                                                    <span className="text-sm font-bold text-gray-500">{slice.platform}</span>
+                                                </div>
+                                            </div>
                                         ))}
-                                    </svg>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-2xl font-black">{isTotalVisible ? `${investments.length}筆` : '••'}</span>
-                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Invested</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* 右側：投資列表 */}
-                        <div className="lg:col-span-7">
-                            <div className="flex justify-between items-center mb-6 px-2">
-                                <h2 className="text-2xl font-black">資產足跡</h2>
-                                <button onClick={() => setIsModalOpen(true)} className="bg-black text-white px-6 py-2 rounded-full font-bold text-sm">新增紀錄</button>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {investments.map(item => (
-                                    <div key={item.id} className={`${COLOR_OPTIONS.find(c => c.id === item.colorId).class} rounded-[32px] p-8 shadow-sm hover:scale-[1.02] transition-transform cursor-pointer relative group`}>
-                                        <div className="flex justify-between mb-12">
-                                            <div className="w-12 h-12 bg-black/5 rounded-2xl flex items-center justify-center font-black text-xl">{item.platform[0]}</div>
-                                            <div className="text-[10px] font-bold opacity-40 uppercase">{item.date}</div>
+                            {/* 右側：列表 */}
+                            <div className="lg:col-span-7">
+                                <div className="flex items-center justify-between mb-8 pl-4">
+                                    <h2 className="text-2xl font-bold flex items-center gap-3">
+                                        累積財富的足跡
+                                        <span className="bg-black text-white text-xs px-2 py-1 rounded-md">{investments.length}</span>
+                                    </h2>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {sortedInvestments.map((item) => (
+                                        <div key={item.id} onClick={() => openEditModal(item)} className={`${COLOR_OPTIONS.find(c => c.id === item.colorId).class} rounded-[40px] p-8 flex flex-col justify-between shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-[280px] cursor-pointer group relative border border-black/5`}>
+                                            <button onClick={(e) => handleDelete(e, item.id)} className="absolute top-6 right-6 w-10 h-10 bg-black/10 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-10">
+                                                <LucideIcon name="trash-2" size={18} />
+                                            </button>
+                                            <div className="flex justify-between items-start">
+                                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mix-blend-multiply ${item.colorId === 'black' ? 'bg-white/20' : 'bg-black/5'}`}>
+                                                    <span className="font-black text-2xl opacity-80">{item.platform.charAt(0)}</span>
+                                                </div>
+                                                <div className="text-xs font-black opacity-40 flex items-center gap-1 tracking-tighter">
+                                                    <LucideIcon name="calendar" size={12} /> {item.date}
+                                                </div>
+                                            </div>
+                                            <div className="mt-auto">
+                                                <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-1 leading-none scale-90 origin-left">
+                                                    {item.platform}
+                                                </div>
+                                                <div className="text-4xl md:text-5xl font-black tracking-tighter mb-2 leading-none">
+                                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency, maximumFractionDigits: 0 }).format(item.amount)}
+                                                </div>
+                                                {item.note && (
+                                                    <div className="flex items-start gap-1.5 opacity-60 mb-3">
+                                                        <LucideIcon name="message-square" size={12} className="mt-0.5 shrink-0" />
+                                                        <p className="text-[11px] font-bold line-clamp-1 leading-tight">{item.note}</p>
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center justify-between">
+                                                    <div className="px-3 py-1 rounded-full text-[10px] font-black mix-blend-multiply border border-current opacity-60 uppercase tracking-widest">{item.type}</div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div className="text-xs font-bold opacity-40 uppercase mb-1">{item.platform}</div>
-                                            <div className="text-3xl font-black tracking-tighter mb-2">{item.currency} {item.amount.toLocaleString()}</div>
-                                            <div className="inline-block px-3 py-1 rounded-full border border-current text-[10px] font-black opacity-60 uppercase">{item.type}</div>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* 懸浮按鈕 (iPhone 專用) */}
-                    <button onClick={() => setIsModalOpen(true)} className="lg:hidden fixed bottom-8 right-8 w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-2xl z-40">
-                        <LucideIcon name="plus" size={32} />
+                    <button onClick={openAddModal} className="fixed bottom-10 right-10 w-20 h-20 bg-black text-white rounded-[28px] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-40 group">
+                        <LucideIcon name="plus" size={36} className="group-hover:rotate-90 transition-transform duration-300" />
                     </button>
 
-                    {/* 新增視窗 */}
                     {isModalOpen && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                            <div className="absolute inset-0 bg-black/20 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-                            <div className="bg-white rounded-[40px] p-10 w-full max-w-lg shadow-2xl relative z-10 zoom-in">
-                                <h2 className="text-3xl font-black mb-6">新增投資項目</h2>
-                                <form onSubmit={(e) => {
-                                    e.preventDefault();
-                                    setInvestments([{ ...formData, id: Date.now().toString(), amount: Number(formData.amount) }, ...investments]);
-                                    setIsModalOpen(false);
-                                }} className="space-y-4">
-                                    <input type="text" placeholder="平台名稱" className="w-full p-4 bg-gray-50 rounded-2xl font-bold" value={formData.platform} onChange={e => setFormData({...formData, platform: e.target.value})} required />
-                                    <input type="number" placeholder="投資金額" className="w-full p-4 bg-gray-100 rounded-2xl font-bold" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} required />
-                                    <div className="flex gap-2">
-                                        {COLOR_OPTIONS.map(c => (
-                                            <button key={c.id} type="button" onClick={() => setFormData({...formData, colorId: c.id})} className={`w-10 h-10 rounded-xl border-2 ${c.class.split(' ')[0]} ${formData.colorId === c.id ? 'border-black' : 'border-transparent'}`} />
-                                        ))}
+                            <div className="absolute inset-0 bg-[#F2F2F7]/80 backdrop-blur-xl" onClick={() => setIsModalOpen(false)}></div>
+                            <div className="bg-white rounded-[48px] p-8 md:p-10 w-full max-w-lg shadow-2xl relative z-10 border border-gray-100 animate-in fade-in zoom-in duration-300">
+                                <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 text-gray-400 hover:text-black transition-colors p-2 bg-gray-50 rounded-full">
+                                    <LucideIcon name="x" size={20} />
+                                </button>
+                                <h2 className="text-3xl font-black mb-2">{editingId ? '修改成就' : '記錄新成就'}</h2>
+                                <p className="text-gray-400 mb-6 font-medium">理財是一種生活的藝術。</p>
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="col-span-2">
+                                            <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">投資平台</label>
+                                            <input type="text" name="platform" value={formData.platform} onChange={handleInputChange} placeholder="名稱..." className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold" required />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">幣別</label>
+                                            <select name="currency" value={formData.currency} onChange={handleInputChange} className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold appearance-none">
+                                                {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">投入金額</label>
+                                            <input type="number" name="amount" value={formData.amount} onChange={handleInputChange} placeholder="0.00" step="0.01" className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold" required />
+                                        </div>
                                     </div>
-                                    <button type="submit" className="w-full bg-black text-white py-5 rounded-2xl font-black text-xl shadow-lg active:scale-95 transition-transform">確認儲存</button>
+                                    <div>
+                                        <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">投資類型</label>
+                                        <input type="text" name="type" value={formData.type} onChange={handleInputChange} placeholder="例如：成長股..." className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">備註</label>
+                                        <textarea name="note" value={formData.note || ''} onChange={handleInputChange} placeholder="補充說明..." rows="2" className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold resize-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">代表色彩</label>
+                                        <div className="flex flex-wrap gap-3 ml-1">
+                                            {COLOR_OPTIONS.map((color) => (
+                                                <button key={color.id} type="button" onClick={() => setFormData(p => ({...p, colorId: color.id}))}
+                                                    className={`w-9 h-9 rounded-xl border-2 transition-all ${formData.colorId === color.id ? 'border-black scale-110 shadow-lg' : 'border-transparent opacity-60 hover:opacity-100'} ${color.class.split(' ')[0]}`} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4 pt-4">
+                                        {editingId && (
+                                            <button type="button" onClick={(e) => handleDelete(e, editingId)} className="flex-1 bg-red-50 text-red-500 py-4 rounded-3xl font-black text-lg hover:bg-red-100 transition-all flex items-center justify-center gap-2">
+                                                <LucideIcon name="trash-2" size={20} /> 刪除
+                                            </button>
+                                        )}
+                                        <button type="submit" className="flex-[2] bg-black text-white py-4 rounded-3xl font-black text-lg hover:shadow-xl active:scale-95 transition-all">
+                                            {editingId ? '完成修改' : '確認新增'}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
