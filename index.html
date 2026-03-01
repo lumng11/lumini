@@ -1,387 +1,69 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>錢錢地圖 - 我的投資紀錄</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F8F9FB; }
+        .animate-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-TW"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;我的投資紀錄儀表板&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Tailwind CSS --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- React &amp; ReactDOM --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Babel for JSX --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Lucide Icons --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://unpkg.com/lucide@latest"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Noto Sans TC', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #F8F9FB;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.animate-in { animation: fadeIn 0.3s ease-out; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.zoom-in { animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>select {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-position: right 1.5rem center;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-repeat: no-repeat;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-size: 1.2em;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>::-webkit-scrollbar { width: 0px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="root"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script type="text/babel"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const { useState, useMemo, useEffect } = React;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Lucide Icon Component Wrapper</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const Icon = ({ name, size = 24, className = "" }) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [iconSvg, setIconSvg] = useState("");</p>
-<p class="p1"><span class="Apple-converted-space">            </span>useEffect(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (window.lucide) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const icon = window.lucide.icons[name];</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if (icon) {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>// Simple fallback for script-based lucide</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, [name]);</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// For this standalone HTML, we use standard lucide-react names but map to SVG or simpler implementation</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// To ensure compatibility, we'll use raw SVG path logic or similar for key icons if needed.</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// But since we are using CDN, the easiest is to use data-lucide attribute.</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return &lt;i data-lucide={name} className={className} style={{ width: size, height: size }}&gt;&lt;/i&gt;;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Custom Lucide Icon Helper for React</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const LucideIcon = ({ name, size = 20, className = "" }) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>useEffect(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (window.lucide) window.lucide.createIcons();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return &lt;i data-lucide={name} className={className} style={{ width: size, height: size, display: 'inline-block' }}&gt;&lt;/i&gt;;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const COLOR_OPTIONS = [</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'yellow', class: 'bg-[#FDE047] text-black', hex: '#FDE047' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'purple', class: 'bg-[#C084FC] text-white', hex: '#C084FC' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'orange', class: 'bg-[#FB923C] text-white', hex: '#FB923C' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'green',<span class="Apple-converted-space">  </span>class: 'bg-[#4ADE80] text-black', hex: '#4ADE80' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'pink', <span class="Apple-converted-space">  </span>class: 'bg-[#F9A8D4] text-black', hex: '#F9A8D4' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'white',<span class="Apple-converted-space">  </span>class: 'bg-white text-black', hex: '#E2E8F0' },<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 'black',<span class="Apple-converted-space">  </span>class: 'bg-[#1C1C1E] text-white', hex: '#1C1C1E' },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const CURRENCIES = [</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ code: 'USD', symbol: '$' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ code: 'TWD', symbol: 'NT$' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ code: 'HKD', symbol: 'HK$' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ code: 'JPY', symbol: '¥' },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const generateId = () =&gt; Math.random().toString(36).substr(2, 9);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function App() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [investments, setInvestments] = useState([</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ id: generateId(), platform: 'Google', amount: 2500.00, currency: 'USD', type: '美股 ETF', date: '2024-02-15', colorId: 'yellow', note: '長期持有，看好 AI 發展' },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ id: generateId(), platform: 'Apple', amount: 4800.00, currency: 'USD', type: '成長股', date: '2024-02-10', colorId: 'orange', note: '核心配置' },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ id: generateId(), platform: 'Binance', amount: 1500.00, currency: 'USD', type: '加密貨幣', date: '2024-01-20', colorId: 'purple', note: '數位黃金實驗' },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ id: generateId(), platform: '台積電', amount: 6500.00, currency: 'USD', type: '核心持股', date: '2024-02-28', colorId: 'green', note: '護國神山' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [isModalOpen, setIsModalOpen] = useState(false);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [editingId, setEditingId] = useState(null);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [isTotalVisible, setIsTotalVisible] = useState(true);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [isChartValueVisible, setIsChartValueVisible] = useState(false);<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [displayMode, setDisplayMode] = useState('percentage');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const [formData, setFormData] = useState({</p>
-<p class="p1"><span class="Apple-converted-space">                </span>platform: '', amount: '', currency: 'USD', type: '', note: '',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>date: new Date().toISOString().split('T')[0], colorId: 'yellow'</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>useEffect(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (window.lucide) window.lucide.createIcons();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, [investments, isModalOpen, isTotalVisible, isChartValueVisible, displayMode]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const totalInvestment = useMemo(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return investments.reduce((sum, item) =&gt; sum + Number(item.amount), 0);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, [investments]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const sortedInvestments = useMemo(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return [...investments].sort((a, b) =&gt; new Date(b.date) - new Date(a.date));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, [investments]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const chartData = useMemo(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>let offset = 0;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const grouped = investments.reduce((acc, item) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if (!acc[item.platform]) {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>acc[item.platform] = {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                            </span>platform: item.platform,<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                            </span>amount: 0,<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                            </span>currency: item.currency,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>hex: COLOR_OPTIONS.find(c =&gt; c.id === item.colorId)?.hex || '#ccc'<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>acc[item.platform].amount += Number(item.amount);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>return acc;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}, {});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>return Object.values(grouped).map(item =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const percentage = totalInvestment &gt; 0 ? (item.amount / totalInvestment) * 100 : 0;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const currentOffset = offset;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>offset += percentage;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>return { ...item, percentage, offset: currentOffset };</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, [investments, totalInvestment]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const handleInputChange = (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const { name, value } = e.target;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setFormData(prev =&gt; ({ ...prev, [name]: value }));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const openAddModal = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setEditingId(null);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setFormData({</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>platform: '', amount: '', currency: 'USD', type: '', note: '',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>date: new Date().toISOString().split('T')[0], colorId: 'yellow'</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setIsModalOpen(true);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const openEditModal = (item) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setEditingId(item.id);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setFormData({ ...item });</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setIsModalOpen(true);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const handleDelete = (e, id) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>e.stopPropagation();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setInvestments(prev =&gt; prev.filter(inv =&gt; inv.id !== id));</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (editingId === id) setIsModalOpen(false);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const handleSubmit = (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>e.preventDefault();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (!formData.platform || !formData.amount) return;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (editingId) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>setInvestments(prev =&gt; prev.map(inv =&gt; inv.id === editingId ? { ...formData, amount: Number(formData.amount) } : inv));</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const newEntry = { ...formData, id: generateId(), amount: Number(formData.amount) };</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>setInvestments(prev =&gt; [newEntry, ...prev]);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setIsModalOpen(false);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const formatNumber = (num) =&gt; new Intl.NumberFormat('en-US', { minimumFractionDigits: 0 }).format(num);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>return (</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="min-h-screen p-4 md:p-10 pb-32"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="max-w-7xl mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;header className="mb-10 flex items-end justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h1 className="text-4xl md:text-5xl font-black tracking-tight"&gt;我的💰💰地圖&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p className="text-gray-500 mt-3 font-medium text-lg"&gt;每一筆投入，都是通往財富自由的一小步。&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div className="grid grid-cols-1 lg:grid-cols-12 gap-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>{/* 左側：總額與圖表 */}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="lg:col-span-5 space-y-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div className="bg-white rounded-[40px] p-10 shadow-sm relative overflow-hidden border border-gray-50"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="flex items-center justify-between mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div className="flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-1"&gt;Total Assets&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;span className="text-lg font-bold text-gray-700"&gt;資產總淨值&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;button onClick={() =&gt; setIsTotalVisible(!isTotalVisible)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-black hover:text-white transition-all"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;LucideIcon name={isTotalVisible ? "eye" : "eye-off"} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="text-5xl md:text-6xl font-black tracking-tighter"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>{isTotalVisible ? `$${formatNumber(totalInvestment)}` : '••••••••'}</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="mt-6 flex items-center gap-2 text-green-600 font-bold text-sm bg-green-50 w-fit px-4 py-1.5 rounded-full"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;LucideIcon name="trending-up" size={16} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span&gt;較上月成長 12.5%&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div className="bg-white rounded-[40px] p-10 shadow-sm overflow-hidden border border-gray-50 text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="flex items-center justify-between mb-12 text-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;h3 className="text-xl font-bold"&gt;資產分佈比例&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;button onClick={() =&gt; setDisplayMode(displayMode === 'percentage' ? 'amount' : 'percentage')} className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all text-xs font-bold"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;LucideIcon name="arrow-right-left" size={14} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>{displayMode === 'percentage' ? '切換金額' : '切換比例'}</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="relative w-72 h-72 mb-12 scale-110 mx-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>{chartData.length &gt; 0 ? chartData.map((slice, i) =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;circle key={i} cx="18" cy="18" r="15.9155" fill="transparent" stroke={slice.hex} strokeWidth="3.5"</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>strokeDasharray={`${slice.percentage} ${100 - slice.percentage}`} strokeDashoffset={-slice.offset}</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>className="transition-all duration-700 ease-in-out" strokeLinecap="round" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>)) : &lt;circle cx="18" cy="18" r="15.9155" fill="transparent" stroke="#F3F4F6" strokeWidth="3.5" /&gt;}</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div className="absolute inset-0 flex flex-col items-center justify-center p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;button onClick={() =&gt; setIsChartValueVisible(!isChartValueVisible)} className="mb-1 text-gray-300 hover:text-gray-500 transition-colors"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;LucideIcon name={isChartValueVisible ? "eye" : "eye-off"} size={20} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;span className="text-3xl font-black truncate max-w-full"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>{isChartValueVisible ? `$${formatNumber(totalInvestment)}` : '•••••'}</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;span className="text-xs text-gray-400 font-bold mt-1 tracking-widest uppercase"&gt;Net Worth&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="w-full flex flex-wrap justify-center gap-x-8 gap-y-8 mt-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>{chartData.map((slice, i) =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;div key={i} className="flex flex-col items-start min-w-[100px] text-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className="text-lg font-black text-gray-900 mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>{displayMode === 'percentage' ? `${Math.round(slice.percentage)}%` : `$${formatNumber(slice.amount)}`}</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className="flex items-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;div className="w-4 h-1.5 rounded-full" style={{ backgroundColor: slice.hex }}&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;span className="text-sm font-bold text-gray-500"&gt;{slice.platform}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>))}</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                            </span>{/* 右側：列表 */}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="lg:col-span-7"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div className="flex items-center justify-between mb-8 pl-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;h2 className="text-2xl font-bold flex items-center gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>累積財富的足跡</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span className="bg-black text-white text-xs px-2 py-1 rounded-md"&gt;{investments.length}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div className="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>{sortedInvestments.map((item) =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div key={item.id} onClick={() =&gt; openEditModal(item)} className={`${COLOR_OPTIONS.find(c =&gt; c.id === item.colorId).class} rounded-[40px] p-8 flex flex-col justify-between shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-[280px] cursor-pointer group relative border border-black/5`}&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;button onClick={(e) =&gt; handleDelete(e, item.id)} className="absolute top-6 right-6 w-10 h-10 bg-black/10 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-10"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;LucideIcon name="trash-2" size={18} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;div className="flex justify-between items-start"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className={`w-14 h-14 rounded-2xl flex items-center justify-center mix-blend-multiply ${item.colorId === 'black' ? 'bg-white/20' : 'bg-black/5'}`}&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;span className="font-black text-2xl opacity-80"&gt;{item.platform.charAt(0)}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className="text-xs font-black opacity-40 flex items-center gap-1 tracking-tighter"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;LucideIcon name="calendar" size={12} /&gt; {item.date}</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;div className="mt-auto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-1 leading-none scale-90 origin-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>{item.platform}</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className="text-4xl md:text-5xl font-black tracking-tighter mb-2 leading-none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: item.currency, maximumFractionDigits: 0 }).format(item.amount)}</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>{item.note &amp;&amp; (</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;div className="flex items-start gap-1.5 opacity-60 mb-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                        </span>&lt;LucideIcon name="message-square" size={12} className="mt-0.5 shrink-0" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                        </span>&lt;p className="text-[11px] font-bold line-clamp-1 leading-tight"&gt;{item.note}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>)}</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;div className="flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>&lt;div className="px-3 py-1 rounded-full text-[10px] font-black mix-blend-multiply border border-current opacity-60 uppercase tracking-widest"&gt;{item.type}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>))}</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onClick={openAddModal} className="fixed bottom-10 right-10 w-20 h-20 bg-black text-white rounded-[28px] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-40 group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;LucideIcon name="plus" size={36} className="group-hover:rotate-90 transition-transform duration-300" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{isModalOpen &amp;&amp; (</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div className="fixed inset-0 z-50 flex items-center justify-center p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="absolute inset-0 bg-[#F2F2F7]/80 backdrop-blur-xl" onClick={() =&gt; setIsModalOpen(false)}&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="bg-white rounded-[48px] p-8 md:p-10 w-full max-w-lg shadow-2xl relative z-10 border border-gray-100 animate-in fade-in zoom-in duration-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button onClick={() =&gt; setIsModalOpen(false)} className="absolute top-8 right-8 text-gray-400 hover:text-black transition-colors p-2 bg-gray-50 rounded-full"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;LucideIcon name="x" size={20} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h2 className="text-3xl font-black mb-2"&gt;{editingId ? '修改成就' : '記錄新成就'}&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p className="text-gray-400 mb-6 font-medium"&gt;理財是一種生活的藝術。&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;form onSubmit={handleSubmit} className="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="grid grid-cols-2 gap-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div className="col-span-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1"&gt;投資平台&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;input type="text" name="platform" value={formData.platform} onChange={handleInputChange} placeholder="名稱..." className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold" required /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1"&gt;幣別&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;select name="currency" value={formData.currency} onChange={handleInputChange} className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold appearance-none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>{CURRENCIES.map(c =&gt; &lt;option key={c.code} value={c.code}&gt;{c.code}&lt;/option&gt;)}</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1"&gt;投入金額&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;input type="number" name="amount" value={formData.amount} onChange={handleInputChange} placeholder="0.00" step="0.01" className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold" required /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1"&gt;投資類型&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;input type="text" name="type" value={formData.type} onChange={handleInputChange} placeholder="例如：成長股..." className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1"&gt;備註&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;textarea name="note" value={formData.note || ''} onChange={handleInputChange} placeholder="補充說明..." rows="2" className="w-full px-6 py-3.5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-black font-bold resize-none" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1"&gt;代表色彩&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;div className="flex flex-wrap gap-3 ml-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>{COLOR_OPTIONS.map((color) =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;button key={color.id} type="button" onClick={() =&gt; setFormData(p =&gt; ({...p, colorId: color.id}))}</p>
-<p class="p1"><span class="Apple-converted-space">                                                    </span>className={`w-9 h-9 rounded-xl border-2 transition-all ${formData.colorId === color.id ? 'border-black scale-110 shadow-lg' : 'border-transparent opacity-60 hover:opacity-100'} ${color.class.split(' ')[0]}`} /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>))}</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div className="flex gap-4 pt-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>{editingId &amp;&amp; (</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;button type="button" onClick={(e) =&gt; handleDelete(e, editingId)} className="flex-1 bg-red-50 text-red-500 py-4 rounded-3xl font-black text-lg hover:bg-red-100 transition-all flex items-center justify-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                                </span>&lt;LucideIcon name="trash-2" size={20} /&gt; 刪除</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>)}</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;button type="submit" className="flex-[2] bg-black text-white py-4 rounded-3xl font-black text-lg hover:shadow-xl active:scale-95 transition-all"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                            </span>{editingId ? '完成修改' : '確認新增'}</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/form&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>)}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const root = ReactDOM.createRoot(document.getElementById('root'));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>root.render(&lt;App /&gt;);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // 簡易圖示元件 (取代原本會報錯的 Lucide)
+        const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
+
+        function App() {
+            const [investments, setInvestments] = useState([
+                { id: '1', platform: 'Google', amount: 2500, currency: 'USD', type: '美股 ETF', date: '2024-02-15', colorId: 'yellow', note: '長期持有' },
+                { id: '2', platform: 'Apple', amount: 4800, currency: 'USD', type: '成長股', date: '2024-02-10', colorId: 'orange', note: '核心配置' }
+            ]);
+
+            return (
+                <div className="max-w-md mx-auto min-h-screen pb-20 animate-in">
+                    <header className="p-6 bg-white border-b sticky top-0 z-10">
+                        <h1 className="text-2xl font-bold text-gray-800">💰 錢錢地圖</h1>
+                        <p className="text-sm text-gray-500 mt-1">追蹤你的資產分佈</p>
+                    </header>
+                    
+                    <main className="p-4 space-y-4">
+                        {investments.map(inv => (
+                            <div key={inv.id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-gray-800">{inv.platform}</h3>
+                                        <p className="text-xs text-gray-400">{inv.date}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-bold text-blue-600">{inv.currency} {inv.amount.toLocaleString()}</p>
+                                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">{inv.type}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </main>
+
+                    <button className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg active:scale-95 transition-transform">
+                        <IconPlus />
+                    </button>
+                </div>
+            );
+        }
+
+        // 這是最重要的一行：把 App 渲染到網頁上
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
